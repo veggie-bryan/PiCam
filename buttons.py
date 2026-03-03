@@ -11,12 +11,12 @@ Down_Pin = 22
 
 class CameraButtons:
     def __init__(self):
-        self.capture = Button(Capture_Pin, pull_up=True)
-        self.menu = Button(Menu_Pin, pull_up=True)
-        self.left = Button(Left_Pin, pull_up=True)
-        self.right = Button(Right_Pin, pull_up=True)
-        self.up = Button(Up_Pin, pull_up=True)
-        self.down = Button(Down_Pin, pull_up=True)
+        self.capture = Button(Capture_Pin, pull_up=True, bounce_time=0.05)
+        self.menu = Button(Menu_Pin, pull_up=True, bounce_time=0.05)
+        self.left = Button(Left_Pin, pull_up=True, bounce_time=0.05)
+        self.right = Button(Right_Pin, pull_up=True, bounce_time=0.05)
+        self.up = Button(Up_Pin, pull_up=True, bounce_time=0.05)
+        self.down = Button(Down_Pin, pull_up=True, bounce_time=0.05)
 
     def bind(self, on_capture, on_menu, on_left, on_right, on_up, on_down):
         self.capture.when_pressed = on_capture

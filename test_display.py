@@ -1,9 +1,12 @@
 import board
 import digitalio
 from adafruit_rgb_display import st7789
-from PIL import Image, ImageDraw
+from PIL import Image
 import time
 
+# -----------------------------
+# DISPLAY SETUP (KNOWN GOOD)
+# -----------------------------
 cs = digitalio.DigitalInOut(board.CE1)
 dc = digitalio.DigitalInOut(board.D5)
 rst = digitalio.DigitalInOut(board.D6)
@@ -22,30 +25,35 @@ display = st7789.ST7789(
     baudrate=40000000,
 )
 
-def fill(color):
-    img = Image.new("RGB", (240, 320), color)
-    display.image(img)
+DISPLAY_WIDTH = 240
+DISPLAY_HEIGHT = 320
 
-print("RED")
-fill((255,0,0))
-time.sleep(1)
+# -----------------------------
+# IMAGE PATH (CHANGE AS NEEDED)
+# -----------------------------
+path = "/home/bryan/photos/20260122_181941_503.jpg"
 
-print("GREEN")
-fill((0,255,0))
-time.sleep(1)
+print("Opening image...")
+img = Image.open(path).convert("RGB")
 
-print("BLUE")
-fill((0,0,255))
-time.sleep(1)
+print("Original size:", img.size)
 
-print("WHITE")
-fill((255,255,255))
-time.sleep(1)
+# Rotate 90 degrees (try 90 or 270 if direction is wrong)
+img = img.rotate(270, expand=True)
 
-img = Image.new("RGB", (240,240), "black")
-draw = ImageDraw.Draw(img)
-draw.text((20,110), "DISPLAY OK", fill="white")
-display.image(img)
+print("After rotation:", img.size)
 
-print("DONE")
-time.sleep(5)
+img.thumbnail((DISPLAY_WIDTH, DISPLAY_HEIGHT), Image.BILINEAR)
+
+print("Scaled size:", img.size)
+
+background = Image.new("RGB", (DISPLAY_WIDTH, DISPLAY_HEIGHT), (0, 0, 0))
+
+x = (DISPLAY_WIDTH - img.width) // 2
+y = (DISPLAY_HEIGHT - img.height) // 2
+
+background.paste(img, (x, y))
+
+display.image(background)
+
+time.sleep(10)
